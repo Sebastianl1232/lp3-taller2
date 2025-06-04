@@ -10,12 +10,12 @@ from flask import request
 load_dotenv()
 
 # TODO: crear la aplicación
-
+app = create_app()
 
 if __name__ == "__main__":
     
     # TODO: Obtener puerto del ambiente o usar 5000 por defecto
-
+    port = int(os.getenv("PORT", 5000))
     
     # TODO: Determinar si se debe usar modo debug
 
