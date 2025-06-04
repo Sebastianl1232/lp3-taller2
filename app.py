@@ -18,7 +18,7 @@ if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))
     
     # TODO: Determinar si se debe usar modo debug
-
+    debug = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes")
     
     # TODO: Ejecutar aplicación
-
+    app.run(host='0.0.0.0', port=port, debug=debug)
