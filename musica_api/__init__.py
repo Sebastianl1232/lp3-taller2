@@ -6,8 +6,9 @@ from flask import Flask
 from .extensions import api, db
 from .resources import ns
 from .config import get_config
+import os
 
-def create_app(config_name=None):
+def create_app(config_name = None):
     """
     Crea y configura la aplicación Flask con sus extensiones.
     
@@ -19,17 +20,19 @@ def create_app(config_name=None):
         Flask: La aplicación Flask configurada y lista para usar.
     """
     # TODO: Crear la app Flask
+    app = Flask(__name__)
     
     # Aplicar configuración según entorno
-    # FIXME: Debe usar el método para leer la configuración
-    config_obj = ""
+    config_obj = get_config(config_name or os.getenv("FLASK_ENV", "default"))
     app.config.from_object(config_obj)
     
     # Inicialización de extensiones
     # TODO: las variables 'api' y 'db'
+    api.init_app(app)
+    db.init_app(app)
     
     # Registro de namespaces
-    api.add_namespace(ns)
+    api.add_namespace(ns, path='/api')
     
     # Crear todas las tablas en la base de datos
     with app.app_context():
