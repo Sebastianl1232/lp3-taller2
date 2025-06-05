@@ -34,15 +34,34 @@ class Ping(Resource):
 # Recursos para Usuarios
 @ns.route("/usuarios")
 class UsuarioListAPI(Resource):
-    @ns.doc("Listar todos los usuarios")
-    @ns.response(200, "Lista de usuarios obtenida con éxito")
-    @ns.marshal_list_with(usuario_model)
+    @ns.doc(params={
+        "page": "Número de página (opcional, por defecto 1)",
+        "per_page": "Elementos por página (opcional, por defecto 10)"
+    })
+     
     def get(self):
         """Obtiene todos los usuarios registrados"""
         # TODO: pendiente de implementar
-        usuarios = Usuario.query.all()
-        return usuarios
-        pass
+        page = request.args.get("page", 1, type=int)
+        per_page = request.args.get("per_page", 10, type=int)
+        pagination = Usuario.query.paginate(page=page, per_page=per_page, error_out=False)
+        usuarios = pagination.items
+        # Serializar manualmente
+        usuarios_serializados = [
+            {
+                "id": u.id,
+                "nombre": u.nombre,
+                "correo": u.correo,
+                "fecha_registro": u.fecha_registro.isoformat() if u.fecha_registro else None
+            }
+            for u in usuarios
+        ]
+        return {
+            "items": usuarios_serializados,
+            "total": pagination.total,
+            "pages": pagination.pages,
+            "current_page": pagination.page
+        }
     
     @ns.doc("Crear un nuevo usuario")
     @ns.expect(usuario_base)
@@ -122,15 +141,36 @@ class UsuarioAPI(Resource):
 # Recursos para Canciones
 @ns.route("/canciones")
 class CancionListAPI(Resource):
-    @ns.doc("Listar todas las canciones")
-    @ns.response(200, "Lista de canciones obtenida con éxito")
-    @ns.marshal_list_with(cancion_model)
+    @ns.doc(params={
+        "page": "Número de página (opcional, por defecto 1)",
+        "per_page": "Elementos por página (opcional, por defecto 10)"
+    })
     def get(self):
         """Obtiene todas las canciones registradas"""
         # TODO: pendiente de implementar
-        canciones = Cancion.query.all()
-        return canciones
-        pass
+        page = request.args.get("page", 1, type=int)
+        per_page = request.args.get("per_page", 10, type=int)
+        pagination = Cancion.query.paginate(page=page, per_page=per_page, error_out=False)
+        canciones = pagination.items
+        canciones_serializadas = [
+            {
+                "id": c.id,
+                "titulo": c.titulo,
+                "artista": c.artista,
+                "album": c.album,
+                "duracion": c.duracion,
+                "año": c.año,
+                "genero": c.genero,
+                "fecha_creacion": c.fecha_creacion.isoformat() if c.fecha_creacion else None
+            }
+            for c in canciones
+        ]
+        return {
+            "items": canciones_serializadas,
+            "total": pagination.total,
+            "pages": pagination.pages,
+            "current_page": pagination.page
+        }
     
     @ns.doc("Crear una nueva canción")
     @ns.expect(cancion_base)
@@ -231,18 +271,7 @@ class CancionBusquedaAPI(Resource):
         return query.all()
 
 # Recursos para Favoritos
-@ns.route("/favoritos")
-class FavoritoListAPI(Resource):
-    @ns.doc("Listar todos los favoritos")
-    @ns.response(200, "Lista de favoritos obtenida con éxito")
-    @ns.marshal_list_with(favorito_model)
-    def get(self):
-        """Obtiene todos los registros de favoritos"""
-        # TODO: pendiente de implementar
-        favoritos = Favorito.query.all()
-        return favoritos
-        pass
-    
+#
     @ns.doc("Marcar una canción como favorita")
     @ns.expect(favorito_input)
     @ns.response(201, "Canción marcada como favorita")
