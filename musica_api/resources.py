@@ -12,6 +12,7 @@ from .api_models import (
 )
 from .extensions import db
 from .models import Usuario, Cancion, Favorito
+import logging
 
 # Namespace para agrupar los recursos de la API
 ns = Namespace("api", description="Operaciones de la API de música")
