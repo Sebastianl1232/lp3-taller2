@@ -110,7 +110,7 @@ lp3-taller2
 
 ### Canciones
 
-- **Listar canciones**: `GET /api/canciones`
+- **Listar canciones**: `GET /api/canciones`-`GET /api/canciones?page=1&per_page=2`
 - **Crear canción**: `POST /api/canciones`
 - **Obtener canción**: `GET /api/canciones/{id}`
 - **Actualizar canción**: `PUT /api/canciones/{id}`
@@ -119,7 +119,7 @@ lp3-taller2
 
 ### Favoritos
 
-- **Listar favoritos**: `GET /api/favoritos`
+- **Listar favoritos**: `GET /api/favoritos`-`GET /api/favoritos?page=1&per_page=2`
 - **Marcar favorito**: `POST /api/favoritos`
 - **Obtener favorito**: `GET /api/favoritos/{id}`
 - **Eliminar favorito**: `DELETE /api/favoritos/{id}`
