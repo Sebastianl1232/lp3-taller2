@@ -102,7 +102,7 @@ lp3-taller2
 
 ### Usuarios
 
-- **Listar usuarios**: `GET /api/usuarios`
+- **Listar usuarios**: `GET /api/usuarios`-`GET /api/usuarios?page=1&per_page=2`
 - **Crear usuario**: `POST /api/usuarios`
 - **Obtener usuario**: `GET /api/usuarios/{id}`
 - **Actualizar usuario**: `PUT /api/usuarios/{id}`
