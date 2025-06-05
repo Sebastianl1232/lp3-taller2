@@ -271,7 +271,35 @@ class CancionBusquedaAPI(Resource):
         return query.all()
 
 # Recursos para Favoritos
-#
+@ns.route("/favoritos")
+class FavoritoListAPI(Resource):
+    @ns.doc(params={
+        "page": "Número de página (opcional, por defecto 1)",
+        "per_page": "Elementos por página (opcional, por defecto 10)"
+    })
+    def get(self):
+        """Obtiene todos los registros de favoritos"""
+        # TODO: pendiente de implementar
+        page = request.args.get("page", 1, type=int)
+        per_page = request.args.get("per_page", 10, type=int)
+        pagination = Favorito.query.paginate(page=page, per_page=per_page, error_out=False)
+        favoritos = pagination.items
+        favoritos_serializados = [
+            {
+                "id": f.id,
+                "id_usuario": f.id_usuario,
+                "id_cancion": f.id_cancion,
+                "fecha_marcado": f.fecha_marcado.isoformat() if f.fecha_marcado else None
+            }
+            for f in favoritos
+        ]
+        return {
+            "items": favoritos_serializados,
+            "total": pagination.total,
+            "pages": pagination.pages,
+            "current_page": pagination.page
+        }
+    
     @ns.doc("Marcar una canción como favorita")
     @ns.expect(favorito_input)
     @ns.response(201, "Canción marcada como favorita")
