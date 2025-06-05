@@ -24,18 +24,17 @@ class Ping(Resource):
     def get(self):
         """Endpoint para verificar que la API está funcionando"""
         # TODO: pendiente de implementar
-        pass
+        return {"mensaje": "API funcionando correctamente"}, 200
+
 
 # Recursos para Usuarios
 @ns.route("/usuarios")
 class UsuarioListAPI(Resource):
-    @ns.doc("Listar todos los usuarios")
-    @ns.response(200, "Lista de usuarios obtenida con éxito")
     @ns.marshal_list_with(usuario_model)
     def get(self):
         """Obtiene todos los usuarios registrados"""
         # TODO: pendiente de implementar
-        pass
+        return Usuario.query.all(), 200
     
     @ns.doc("Crear un nuevo usuario")
     @ns.expect(usuario_base)
@@ -45,9 +44,12 @@ class UsuarioListAPI(Resource):
     def post(self):
         """Crea un nuevo usuario"""
         data = request.json
+        logging.info(f"Creando usuario: {data}")
         
         # Verificar si el correo ya existe
         if Usuario.query.filter_by(correo=data["correo"]).first():
+            logging.warning(f"Correo ya registrado: {data['correo']}")
+            # Abortamos la solicitud con un error 400
             ns.abort(400, "El correo electrónico ya está registrado")
         
         usuario = Usuario(
@@ -58,9 +60,11 @@ class UsuarioListAPI(Resource):
         try:
             db.session.add(usuario)
             db.session.commit()
+            logging.info(f"Usuario creado: {usuario.id}")
             return usuario, 201
         except Exception as e:
             db.session.rollback()
+            logging.error(f"Error al crear usuario: {str(e)}")
             ns.abort(400, f"Error al crear usuario: {str(e)}")
 
 @ns.route("/usuarios/<int:id>")
@@ -72,6 +76,7 @@ class UsuarioAPI(Resource):
     def get(self, id):
         """Obtiene un usuario por su ID"""
         # TODO: pendiente de implementar
+        return Usuario.query.get_or_404(id)
         pass
     
     @ns.doc("Actualizar un usuario")
@@ -119,6 +124,7 @@ class CancionListAPI(Resource):
     def get(self):
         """Obtiene todas las canciones registradas"""
         # TODO: pendiente de implementar
+        return Cancion.query.all()
         pass
     
     @ns.doc("Crear una nueva canción")
@@ -155,6 +161,7 @@ class CancionAPI(Resource):
     def get(self, id):
         """Obtiene una canción por su ID"""
         # TODO: pendiente de implementar
+        return Cancion.query.get_or_404(id)
         pass
     
     @ns.doc("Actualizar una canción")
@@ -226,7 +233,8 @@ class FavoritoListAPI(Resource):
     def get(self):
         """Obtiene todos los registros de favoritos"""
         # TODO: pendiente de implementar
-        pass
+        return Favorito.query.all()
+        
     
     @ns.doc("Marcar una canción como favorita")
     @ns.expect(favorito_input)
