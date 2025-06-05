@@ -1,3 +1,7 @@
+## Datos del Estudiante
+- **Nombre**: Jhon Sebastian Lema Montoya
+- **Cc**: 1.108.560.466
+- **Sugerencia de Mejora**: 
 # API de Música
 
 Una [API RESTful](https://aws.amazon.com/es/what-is/restful-api/) para gestionar usuarios, canciones y relaciones de favoritos. Desarrollada con [Flask](https://flask.palletsprojects.com/en/stable/), [Flask-RESTX](https://flask-restx.readthedocs.io/en/latest/), [Flask-SQLAlchemy](https://flask-sqlalchemy.readthedocs.io/en/stable/) y [SQLAlchemy](https://www.sqlalchemy.org/).
